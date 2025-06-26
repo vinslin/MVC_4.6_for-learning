@@ -1,0 +1,153 @@
+﻿@model IEnumerable<MVC_4._6_for_learning.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<center>
+    <h1>How To Insert & Display Records From Database In Single View Page </h1>
+    <h2>Using Json Result, With Entity Framework </h2>
+    <hr />
+
+    <table border="1">
+        <tr>
+            <td>
+                Employee Name <br />
+                <input type="text" id="txtname" />
+            </td>
+
+            <td>
+                Email <br />
+                <input type="text" id="txtemail" />
+            </td>
+
+            <td>
+                Age <br />
+                <input type="number" id="txtage" />
+            </td>
+
+            <td>
+                Salary<br />
+                <input type="number" id="txtsalary" />
+            </td>
+
+            <td>
+                <input type="button" value="Insert New Record" id="empbutton" />
+            </td>
+        </tr>
+    </table>
+
+    <br />
+    <table border="1" id="emptable">
+        <tr>
+            <th>Id</th>
+            <th>Employee Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Salary</th>
+            <th>Options</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><span>@item.Id</span></td>
+                <td><span>@item.Empname</span></td>
+                <td><span>@item.Email</span></td>
+                <td><span>@item.Age</span></td>
+                <td><span>@item.Salary</span></td>
+                <td>
+                    <a href="javascript:;" class="Edit" data-id="@item.Id">Edit</a>
+                    <a href="javascript:;" class="Update" style="display:none;" data-id="@item.Id">Update</a>
+                    <a href="javascript:;" class="Cancel" style="display:none;" data-id="@item.Id">Cancel</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</center>
+
+<!-- jQuery & JSON support -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/json2/20160511/json2.min.js"></script>
+
+<script type="text/javascript">
+    $("body").on("click", "#empbutton", function () {
+
+        if (
+            $("#txtname").val() === "" ||
+            $("#txtemail").val() === "" ||
+            $("#txtage").val() === "" ||
+            $("#txtsalary").val() === ""
+        ) {
+            alert("Please Enter Data Into All Textboxes!");
+        } else {
+            var txtname = $("#txtname");
+            var txtemail = $("#txtemail");
+            var txtage = $("#txtage");
+            var txtsalary = $("#txtsalary");
+
+            $.ajax({
+                type: "POST",
+                url: "/EMP/Insertemp",
+                data: JSON.stringify({     
+                    Empname: txtname.val(),
+                    Email: txtemail.val(),
+                    Age: txtage.val(),
+                    Salary: txtsalary.val()
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+                    // Optional: append to table dynamically
+                    // var newRow = "<tr><td>" + txtname.val() + "</td><td>" + txtemail.val() + "</td><td>" + txtage.val() + "</td><td>" + txtsalary.val() + "</td></tr>";
+                    // $("#emptable").append(newRow);
+
+                    location.reload(); // Refresh to get updated data
+                }
+            });
+
+            // Clear input fields
+            txtname.val("");
+            txtemail.val("");
+            txtage.val("");
+            txtsalary.val("");
+        }
+    });
+    $("body").on("click", "#emptable .Edit", function () {
+        var row = $(this).closest("tr");
+
+        row.find("td").each(function (index) {
+            if (index > 0 && index < 5) { // skip Id and buttons
+                var span = $(this).find("span");
+                var value = span.text().trim();
+                var inputType = (index === 3 || index === 4) ? "number" : "text";
+
+                span.replaceWith('<input type="' + inputType + '" class="tempInput" value="' + value + '"/>');
+            }
+        });
+
+        row.find(".Edit").hide();
+        row.find(".Update, .Cancel").show();
+    });
+
+    $("body").on("click", "#emptable .Cancel", function () {
+        var row = $(this).closest("tr");
+
+        row.find("td").each(function (index) {
+            if (index > 0 && index < 5) {
+                var input = $(this).find("input.tempInput");
+                if (input.length) {
+                    var value = input.val();
+                    input.replaceWith('<span>' + value + '</span>');
+                }
+            }
+        });
+
+        row.find(".Edit").show();
+        row.find(".Update, .Cancel").hide();
+    });
+
+
+
+</script>

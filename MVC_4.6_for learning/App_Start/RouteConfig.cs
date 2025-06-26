@@ -16,7 +16,7 @@ namespace MVC_4._6_for_learning
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "EMP", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

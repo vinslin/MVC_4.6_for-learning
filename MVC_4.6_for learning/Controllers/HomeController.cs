@@ -8,11 +8,11 @@ namespace MVC_4._6_for_learning.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+    /*    public ActionResult Index()
         {
             return View();
         }
-
+    */
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
