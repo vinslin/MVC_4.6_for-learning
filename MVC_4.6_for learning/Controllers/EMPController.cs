@@ -32,6 +32,7 @@ namespace MVC_4._6_for_learning.Controllers
             return Json(emp, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
         public ActionResult EmpUpdate(Employee emp)
         {
 

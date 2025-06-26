@@ -50,11 +50,11 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td><span>@item.Id</span></td>
-                <td><span>@item.Empname</span></td>
-                <td><span>@item.Email</span></td>
-                <td><span>@item.Age</span></td>
-                <td><span>@item.Salary</span></td>
+                <td class="Id"><span>@item.Id</span></td>
+                <td class="Empname"><span>@item.Empname</span></td>
+                <td class="Email"><span>@item.Email</span></td>
+                <td class="Age"><span>@item.Age</span></td>
+                <td class="Salary"><span>@item.Salary</span></td>
                 <td>
                     <a href="javascript:;" class="Edit" data-id="@item.Id">Edit</a>
                     <a href="javascript:;" class="Update" style="display:none;" data-id="@item.Id">Update</a>
@@ -114,6 +114,9 @@
             txtsalary.val("");
         }
     });
+
+    //edit
+
     $("body").on("click", "#emptable .Edit", function () {
         var row = $(this).closest("tr");
 
@@ -131,6 +134,9 @@
         row.find(".Update, .Cancel").show();
     });
 
+
+    //cancel
+
     $("body").on("click", "#emptable .Cancel", function () {
         var row = $(this).closest("tr");
 
@@ -146,6 +152,45 @@
 
         row.find(".Edit").show();
         row.find(".Update, .Cancel").hide();
+    });
+
+    $("body").on("click", "#emptable .Update", function () {
+        var row = $(this).closest("tr");
+
+        // Replace each input with its value inside a span
+        row.find("td").each(function (index) {
+            if (index > 0 && index < 5) {
+                var input = $(this).find("input.tempInput");
+                if (input.length) {
+                    var value = input.val();
+                    input.replaceWith('<span>' + value + '</span>');
+                }
+            }
+        });
+
+        row.find(".Edit").show();
+        row.find(".Update, .Cancel").hide();
+
+        // Build object for AJAX update
+        var empupdated = {
+            Id: row.find(".Id span").html(),
+            Empname: row.find(".Empname span").html(),
+            Email: row.find(".Email span").html(),
+            Age: row.find(".Age span").html(),
+            Salary: row.find(".Salary span").html()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/EMP/EmpUpdate",
+            data: JSON.stringify(empupdated),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function () {
+                alert("Updated successfully!");
+                location.reload();
+            }
+        });
     });
 
 
