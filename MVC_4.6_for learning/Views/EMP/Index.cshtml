@@ -47,6 +47,7 @@
             <th>Salary</th>
             <th>Options</th>
             <th>Delete</th>
+            <th>Views</th>
         </tr>
         @foreach (var item in Model)
         {
@@ -66,6 +67,9 @@
                 <td>
                     <a href="javascript:;" class="Delete" data-id="@item.Id">Delete</a>
                 </td>
+                <td>
+                    <a href="/EMP/Details/@item.Id">View</a>
+                    </td>
             </tr>
         }
 

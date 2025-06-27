@@ -69,5 +69,20 @@ namespace MVC_4._6_for_learning.Controllers
             }
         }
 
+        public ActionResult Details(int id) {
+
+
+            using (LibraryDBEntities db = new LibraryDBEntities())
+
+            {
+                var emp = db.Employees.FirstOrDefault(e => e.Id ==id);
+                if(emp==null) 
+                                   {
+                    return HttpNotFound();
+                }
+                return View(emp);
+            }
+        }
+
     }
 }
