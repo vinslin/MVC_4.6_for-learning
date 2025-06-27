@@ -51,5 +51,23 @@ namespace MVC_4._6_for_learning.Controllers
                 return new EmptyResult();
             }
         }
+
+
+        [HttpPost]
+        public JsonResult EmpDelete(int id)
+        {
+            using (LibraryDBEntities db = new LibraryDBEntities())
+            {
+                var emp = db.Employees.Find(id);
+                if (emp != null)
+                {
+                    db.Employees.Remove(emp);
+                    db.SaveChanges();
+                }
+
+                return Json(new { success = true });
+            }
+        }
+
     }
 }

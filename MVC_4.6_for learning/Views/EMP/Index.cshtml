@@ -9,7 +9,7 @@
     <h2>Using Json Result, With Entity Framework </h2>
     <hr />
 
-    <table border="1">
+    <table border="2">
         <tr>
             <td>
                 Employee Name <br />
@@ -46,6 +46,7 @@
             <th>Age</th>
             <th>Salary</th>
             <th>Options</th>
+            <th>Delete</th>
         </tr>
         @foreach (var item in Model)
         {
@@ -59,6 +60,11 @@
                     <a href="javascript:;" class="Edit" data-id="@item.Id">Edit</a>
                     <a href="javascript:;" class="Update" style="display:none;" data-id="@item.Id">Update</a>
                     <a href="javascript:;" class="Cancel" style="display:none;" data-id="@item.Id">Cancel</a>
+                   
+                </td>
+
+                <td>
+                    <a href="javascript:;" class="Delete" data-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }
@@ -153,7 +159,35 @@
         row.find(".Edit").show();
         row.find(".Update, .Cancel").hide();
     });
+    //delete
+    $("body").on("click", "#emptable .Delete", function () {
+        var row = $(this).closest("tr");
+        var id = row.find(".Id span").text(); // make sure you're using .text()
 
+        $.ajax({
+            type: "POST",
+            url: "/EMP/EmpDelete",
+            data: JSON.stringify({ id: id }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response.success) {
+                    alert("Deleted successfully!");
+                    row.remove(); // removes the row from table without reload
+                } else {
+                    alert("Delete failed!");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", status, error);
+                alert("Something went wrong.");
+            }
+        });
+    });
+
+   
+
+    //update
     $("body").on("click", "#emptable .Update", function () {
         var row = $(this).closest("tr");
 
